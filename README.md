@@ -1,5 +1,51 @@
 # scientist-discovery
 
+## Generate ideas ##
+- use https://github.com/SakanaAI/AI-Scientist-v2/blob/main/ai_scientist/perform_ideation_temp_free.py to generate ideas with initial documents
+- it will use semetic scholar for novelty checking
+- we can also use Exa query for novelty checking
+
+#### AI-Scientist-v2 ####
+```
+python ai_scientist/perform_ideation_temp_free.py \
+--workshop-file "ai_scientist/ideas/duplicate_better_one.md" \
+--model o4-mini \
+--max-num-generations 20 \
+--num-reflections 5
+```
+
+#### Exa query ####
+```
+from exa_py import Exa
+
+exa = Exa(api_key = "851e41eb-0ae4-4db3-a7f3-2f29fbf16534")
+
+result = exa.search_and_contents(
+  "Here is an IDEA JSON. Please find similar ones.
+{
+  "Name": "dspy",
+  "Title": "DSPy: Declarative Self-Improving Pipelines for Language Models",
+  "Short Hypothesis": "Declaratively specifying LM pipelines as parameterized text transformation graphs and optimizing them via a compiler yields self-improving pipelines that outperform manual prompt templates on complex reasoning and retrieval tasks, providing a systematic alternative to ad-hoc prompt engineering. ",
+  "Related Work": "AutoPrompt (Shin et al., 2020) automates prompt generation via gradient-guided search but focuses on static prompts and discrete tokens, lacking end-to-end pipeline composition and optimization.  Chain-of-Thought Prompting (Wei et al., 2022) improves reasoning by injecting intermediate steps in prompts but relies on handcrafted exemplars and does not support parameterized modules or compiler-based tuning.  [oai_citation:0‡arxiv.org](https://arxiv.org/abs/2201.11903) DSPy distinguishes itself by offering a declarative DSL and compiler to automate and optimize entire LM pipelines.",
+  "Abstract": "The machine learning community has explored techniques for prompting and chaining language models (LMs) into pipelines for complex tasks. However, existing pipelines rely on manually designed prompt templates, which are brittle and time-consuming to construct. We propose DSPy, a programming model that represents LM pipelines as imperative text transformation graphs with declarative, parameterized modules that can learn to compose prompting, fine-tuning, data augmentation, and reasoning steps. DSPy includes a compiler that automatically optimizes any pipeline to maximize user-specified performance metrics by tuning module parameters and structure. We demonstrate in two case studies—solving math word problems and multi-hop retrieval question answering—that brief DSPy programs can self-bootstrap pipelines using GPT-3.5 and llama2-13b-chat, achieving over 25% and 65% improvements over standard few-shot prompting, respectively, and surpass expert-crafted prompt chains by up to 46% and 40%. Furthermore, DSPy-compiled pipelines targeting smaller open models like T5-770M deliver competitive performance relative to proprietary GPT-3.5 chains. DSPy thus offers a systematic, extensible approach for constructing and optimizing LM-based pipelines. ",
+  "Experiments": [
+    "Math Word Problem Reasoning: Define a DSPy pipeline for the GSM8K benchmark with modules for demonstration retrieval, chain-of-thought prompting, and answer verification. Compile to tune module parameters to maximize accuracy using GPT-3.5 and llama2-13b-chat. Compare against standard 5-shot chain-of-thought prompting and manually authored prompt chains. Evaluate accuracy and average number of LM calls. ",
+    "Multi-Hop Retrieval QA: Construct a DSPy pipeline for HotpotQA, including document retrieval, evidence chaining, and answer generation modules. Compile to optimize F1 score on the development set using llama2-13b-chat. Compare to expert-designed retrieval pipelines. Measure F1, precision, recall, and latency per query. ",
+    "Agent Loop Control: Build an environment-agent DSPy pipeline with modules for state encoding, planning, and action execution. Compile to maximize task success rate on a simulated environment (e.g., MiniGrid). Compare compiled vs. uncompiled pipelines. Report success rate, average steps to completion, and compile time overhead. ",
+    "Ablation Study: Disable parameterized module learning or optimization in the compiler to evaluate the impact on performance and resource consumption. Track accuracy degradation and additional compile time cost. "
+  ],
+  "Risk Factors and Limitations": [
+    "Compile-time Optimization Overhead: The search for optimal module parameters may incur significant computational cost, limiting real-time or resource-constrained applications. ",
+    "Local Optima and Convergence: The compiler’s optimization process may converge to suboptimal configurations, leading to pipelines that underperform on unseen data. ",
+    "Dependence on Base Model Quality: Pipeline performance is bounded by the capabilities of the underlying LM; smaller or less capable models may not yield improvements. ",
+    "DSL Usability Barrier: The declarative programming model introduces a learning curve, potentially hindering adoption among practitioners unfamiliar with graph-based abstractions. "
+  ]
+}",
+  text = True
+)
+```
+
+### Query on semanticscholar.org ##
 ```
 curl 'https://www.semanticscholar.org/api/1/search' \
   -H 'accept: */*' \
@@ -23,3 +69,5 @@ curl 'https://www.semanticscholar.org/api/1/search' \
   -H 'x-s2-ui-version: 8540dc0f70c785aaa5463622f838b974e4200893' \
   --data-raw '{"queryString":"DSPy: Declarative Self-Improving Pipelines for Language Models","page":1,"pageSize":10,"sort":"relevance","authors":[],"coAuthors":[],"venues":[],"yearFilter":null,"requireViewablePdf":false,"fieldsOfStudy":[],"hydrateWithDdb":true,"includeTldrs":true,"performTitleMatch":true,"includeBadges":true,"getQuerySuggestions":false,"cues":["CitedByLibraryPaperCue","CitesYourPaperCue","CitesLibraryPaperCue"],"includePdfVisibility":true}'
 ```
+
+## Run AI Scientist-v2 Paper Generation Experiments ##
