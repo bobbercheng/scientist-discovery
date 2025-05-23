@@ -1,9 +1,11 @@
 # scientist-discovery
 
 ## Generate ideas ##
-- Use revised version of https://github.com/SakanaAI/AI-Scientist-v2/blob/main/ai_scientist/perform_ideation_temp_free.py to generate ideas with initial documents.
-- It will use Exa instead of semetic scholar for novelty checking.
-- Copy .env.exmaple as .env, set EXA_API_KEY. Set LLM API key OPENAI_API_KEY or ANTHROPIC_API_KEY based on your model.
+- Copy .env.exmaple as .env, set EXA_API_KEY. Set LLM API key OPENAI_API_KEY or ANTHROPIC_API_KEY based on your model. You can get EXA_API_KEY from https://exa.ai/.
+- Fill your discovery idea to ai_scientist/ideas/AlphaEvolve.md.
+- Run ai_scientist/perform_ideation_temp_free.py to generate ideas with initial documents.
+- Your discovery idea will be saved as ai_scientist/ideas/AlphaEvolve.json
+- You can get JSON parse error with some LLM models due to LLM reasoning limit. Please ignore the error and keep it run as long as it can generate 1 idea.
 
 #### AI-Scientist-v2 ####
 ```
@@ -22,4 +24,4 @@ python ai_scientist/perform_ideation_temp_free.py \
 - Antropic claude-3-7-sonnet-20250219 is good but it's very slow.
 
 ## Credit
-Many thanks for https://github.com/SakanaAI/AI-Scientist-v2.
+Many thanks for https://github.com/SakanaAI/AI-Scientist-v2 and https://exa.ai/.
