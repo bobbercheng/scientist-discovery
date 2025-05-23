@@ -16,8 +16,9 @@ python ai_scientist/perform_ideation_temp_free.py \
 
 ## Run AI Scientist-v2 Paper Generation Experiments ##
 ### Different LLM models ####
+- Antropic claude-sonnet-4-2025051 is very good. Refer to [AlphaEvolve-sonnet-4.json](ai_scientist/ideas/AlphaEvolve-sonnet-4.json)
 - Google gemini-2.5-pro-preview-05-06 has bad peformance as it often returns unexpected JSON object.
-- OpenAI o4-mini is good model, o3 is very good.
+- OpenAI o4-mini is good model, o3 is very good. Refer to [AlphaEvolve-o3.json](ai_scientist/ideas/AlphaEvolve-o3.json)
 - Antropic claude-3-7-sonnet-20250219 is good but it's very slow.
 
 ## Credit
