@@ -39,6 +39,7 @@ AVAILABLE_LLMS = [
     "deepcoder-14b",
     # Llama 3 models
     "llama3.1-405b",
+    "llama-4-maverick-17b-128e-instruct",
     # Anthropic Claude models via Amazon Bedrock
     "bedrock/anthropic.claude-3-sonnet-20240229-v1:0",
     "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0",
@@ -122,6 +123,23 @@ def get_batch_responses_from_llm(
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         response = client.chat.completions.create(
             model="meta-llama/llama-3.1-405b-instruct",
+            messages=[
+                {"role": "system", "content": system_message},
+                *new_msg_history,
+            ],
+            temperature=temperature,
+            max_tokens=MAX_NUM_TOKENS,
+            n=n_responses,
+            stop=None,
+        )
+        content = [r.message.content for r in response.choices]
+        new_msg_history = [
+            new_msg_history + [{"role": "assistant", "content": c}] for c in content
+        ]
+    elif model == "llama-4-maverick-17b-128e-instruct":
+        new_msg_history = msg_history + [{"role": "user", "content": msg}]
+        response = client.chat.completions.create(
+            model="meta-llama/llama-4-maverick-17b-128e-instruct",
             messages=[
                 {"role": "system", "content": system_message},
                 *new_msg_history,
@@ -361,6 +379,21 @@ def get_response_from_llm(
         )
         content = response.choices[0].message.content
         new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
+    elif model in ["meta-llama/llama-4-maverick-17b-128e-instruct", "llama-4-maverick-17b-128e-instruct"]:
+        new_msg_history = msg_history + [{"role": "user", "content": msg}]
+        response = client.chat.completions.create(
+            model="meta-llama/llama-4-maverick-17b-128e-instruct",
+            messages=[
+                {"role": "system", "content": system_message},
+                *new_msg_history,
+            ],
+            temperature=temperature,
+            max_tokens=MAX_NUM_TOKENS,
+            n=1,
+            stop=None,
+        )
+        content = response.choices[0].message.content
+        new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
     elif 'gemini' in model:
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         response = client.chat.completions.create(
@@ -465,6 +498,15 @@ def create_client(model) -> tuple[Any, str]:
                 base_url="https://openrouter.ai/api/v1",
             ),
             "meta-llama/llama-3.1-405b-instruct",
+        )
+    elif model == "llama-4-maverick-17b-128e-instruct":
+        print(f"Using OpenAI API with {model}.")
+        return (
+            openai.OpenAI(
+                api_key=os.environ["OPENROUTER_API_KEY"],
+                base_url="https://api.groq.com/openai/v1",
+            ),
+            "meta-llama/llama-4-maverick-17b-128e-instruct",
         )
     elif 'gemini' in model:
         print(f"Using OpenAI API with {model}.")
